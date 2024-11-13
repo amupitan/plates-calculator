@@ -12,5 +12,19 @@ div {
 }
 
 #plates {
-    font-size: x-large;
+    /* font-size: x-large; */
+}
+
+.app {
+    margin-top: 40%;
+    font-size: xxx-large;
+}
+
+.incoming {
+    font-size: xxx-large;
+}
+
+.checkbox {
+    width: 30px;
+    height: 30px;
 }

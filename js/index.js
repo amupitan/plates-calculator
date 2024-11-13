@@ -1,3 +1,5 @@
+const defaultWeights = [45, 25, 10, 5, 2.5];
+
 const error = document.getElementById('error');
 if (error === null) {
     console.error('Failed to find error element');
@@ -13,6 +15,16 @@ if (plates === null) {
     logError('Output box was not found. Reload page');
 }
 
+const side = document.getElementById('side');
+if (plates === null) {
+    logError('Side Output box was not found. Reload page');
+}
+
+const use55 = document.getElementById('use55');
+if (use55 === null) {
+    logError('Checkbox for 55 was not found. Reload page');
+}
+
 function logError(message = '') {
     if (error !== null) {
         error.innerHTML = message;
@@ -21,6 +33,9 @@ function logError(message = '') {
     if (message !== '') {
         console.error(message);
         plates.innerHTML = '';
+        if (side !== null) {
+            side.innerHTML = ``;
+        }
     }
 }
 
@@ -28,9 +43,8 @@ function clearError() {
     logError('');
 }
 
-function getWeights(total) {
-    const weights = [45, 25, 10, 5, 2.5];
-    total -= 45;
+function getWeights(input, weights) {
+    let total = input - 45;
     let returnWeights = [];
 
     for (const weight of weights) {
@@ -44,7 +58,7 @@ function getWeights(total) {
         return [false, total];
     }
 
-    return [true, returnWeights];
+    return [true, returnWeights, (input - 45) / 2];
 }
 
 const form = document.getElementById('raw');
@@ -63,13 +77,22 @@ if (form === null) {
             return;
         }
 
-        const [success, result] = getWeights(value);
+        let weights = defaultWeights;
+        if ((use55 !== null) && (use55.checked)) {
+            weights = [55, ...defaultWeights];
+        }
+
+        const [success, result, half] = getWeights(value, weights);
         if (!success) {
             logError(`'${value}' is not valid with the available weights. Extra ${result} lbs`);
             return;
         }
 
         plates.innerHTML = '[ ' + result.join(', ') + ' ]';
+        if (side !== null) {
+            side.innerHTML = `${half}`;
+        }
+
         clearError();
     }
 }
